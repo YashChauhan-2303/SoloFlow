@@ -1,0 +1,32 @@
+Feature Being Tested:
+Frontend:Register and Login functionality — Ensuring that the registration and login form accepts user input and submits the form correctly.
+Backend:Covers the functionality of the Node.js backend, ensuring that the API endpoints and business logic are working as intended.
+
+Type of Test Implemented:
+Frontend:Component test using React Testing Library and Vitest to simulate user interaction and form submission.
+Backend:Unit test with jest and supertest
+
+File Path:
+SoloFlow/frontend/src/pages/Register.test.jsx
+SoloFlow/frontend/src/pages/Login.test.jsx
+SoloFlow/frontend/src/test/setup.js (configuration file)
+
+SoloFlow/backend/tests/user.test.js
+SoloFlow/backend/jest/config.js (configuration file)
+
+
+
+Instructions to Run the Test:
+FRONTEND
+1. Open your terminal and navigate to the frontend directory:
+   cd frontend
+
+2. Run the tests using Vitest:
+   npx vitest
+
+Backend
+1. Open your terminal and navigate to the backend directory:
+   cd backend
+
+2. Run the tests using Jest:
+   npx jest

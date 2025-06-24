@@ -1,0 +1,4 @@
+Added Share App through Whatsapp, Twitter or facebook option in the landing Page
+Upon click it opens the respective application, with a message Share Soloflow with your friends https://github.com/HackSomeThorns-2025/ManipalSuperKings
+
+file modified : ManipalSuperKings\SoloFlow\frontend\src\pages\Landing.jsx

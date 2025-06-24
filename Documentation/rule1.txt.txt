@@ -1,0 +1,1 @@
+Repository structured as per guidelines with clean hierarchy, proper .gitignore & .env, detailed README.md added, Day 1 requirements completed , and IEEE research paper's introduction section is done.

@@ -1,0 +1,6 @@
+Regarding animations:
+
+Animations are tailwind and framer motion animations
+Animations are added for login and register button (Path: ManipalSuperKings\SoloFlow\frontend\src\pages\Landing.jsx)
+Page transition animations are also added using  motion.div in Landing.jsx and by wrapping Routes in App.jsx using <AnimatePresence mode="wait">
+Hover effects for certain components already exist

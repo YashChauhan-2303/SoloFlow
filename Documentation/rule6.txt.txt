@@ -1,0 +1,3 @@
+Added a demo video of our project showcasing all functionalities.
+
+ManipalSuperKings/Documentation/Demo.mp4

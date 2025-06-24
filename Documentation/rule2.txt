@@ -1,0 +1,6 @@
+Login page and Landing Page are given dark mode feature.
+Rest of the pages will also have the feature in the future
+
+Path: ManipalSuperKings\SoloFlow\frontend\src\contexts\ThemeContext.jsx - has the theme context 
+Every page uses the darkTheme from this global context by calling useTheme()
+
