@@ -1,6 +1,6 @@
 import HeatMap from "@uiw/react-heat-map";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Cell,

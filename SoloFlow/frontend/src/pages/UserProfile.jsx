@@ -1,5 +1,5 @@
 {/*import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiCamera, FiEdit2, FiLock, FiMail, FiSave } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -246,8 +246,9 @@ const UserProfile = () => {
   export default UserProfile;*/}
 
 
+  import React from 'react';
   import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+  import { useEffect, useState } from "react";
 import { FiCamera, FiEdit2, FiLock, FiMail, FiSave } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";

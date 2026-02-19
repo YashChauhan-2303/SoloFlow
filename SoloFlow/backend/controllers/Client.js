@@ -10,13 +10,14 @@ async function addClient(req, res) {
     const {user_id}=req.params;
     const { client_name, client_email, client_address,client_company } = req.body;
 
-    if (!client_name || !client_email |!client_company||!client_address) {
+    // Validate required fields
+    if (!client_name || !client_email || !client_company || !client_address) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    if(!user_id){
-        res.status(401).json({message:"Not authenticated"});
-    }
+  if(!user_id){
+    return res.status(401).json({message:"Not authenticated"});
+  }
 
     const user=await User.findById(user_id);
     if (!user) {
@@ -41,7 +42,7 @@ async function addClient(req, res) {
     if(savedClient){
       return res.status(200).json({message:"Client added"});
     }else{
-      return res.status(400).json({error:error.message});
+      return res.status(400).json({error: 'Failed to save client'});
     }
 
   } catch (error) {

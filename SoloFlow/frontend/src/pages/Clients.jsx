@@ -1,5 +1,5 @@
 {/*import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiPlus, FiSearch } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -326,6 +326,7 @@ function Clients() {
 
 export default Clients;*/}
 
+import React from 'react';
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { FiPlus, FiSearch } from "react-icons/fi";

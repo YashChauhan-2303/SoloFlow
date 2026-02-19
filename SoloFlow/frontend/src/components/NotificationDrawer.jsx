@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { FiTrash2, FiX } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import { useNotification } from "../contexts/NotificationContext";

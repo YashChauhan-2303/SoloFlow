@@ -1,3 +1,4 @@
+import React from 'react'
 import { motion } from 'framer-motion'
 import { FiBell, FiMoon, FiSun, FiUser } from 'react-icons/fi'
 import { NavLink, useParams } from 'react-router-dom'
@@ -5,9 +6,11 @@ import { useNotification } from '../contexts/NotificationContext'
 import { useTheme } from '../contexts/ThemeContext'
 
 function Navbar() {
-  const { darkMode, toggleDarkMode } = useTheme()
+  const { darkMode, toggleDarkMode } = useTheme() || { darkMode: false, toggleDarkMode: () => {} };
   const { user_id } = useParams();
-  const { drawerOpen, toggleDrawer, notifications } = useNotification();
+  // Defensive: if NotificationProvider is not mounted, provide fallbacks to avoid runtime crash
+  const notificationCtx = useNotification();
+  const { drawerOpen = false, toggleDrawer = () => {}, notifications = [] } = notificationCtx || {};
 
   const activeLinkStyle = darkMode 
     ? 'text-blue-300 border-blue-400 font-medium' 
