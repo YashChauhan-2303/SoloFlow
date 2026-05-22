@@ -2,16 +2,23 @@
  * Reusable helper utility for API endpoint base URLs.
  * Resolves VITE_API_URL from Vite environment variables.
  */
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+// Remove any trailing slash from the base URL
+export const API_BASE_URL = (
+  import.meta.env.VITE_API_URL || "http://localhost:3000"
+).replace(/\/+$/, "");
 
 /**
  * Constructs a full API URL for a given path.
- * Ensures no double slashes when joining base URL and path.
- * 
- * @param {string} path - The sub-route or path (e.g. '/login' or 'user/123')
- * @returns {string} The full resolved API URL
+ *
+ * Examples:
+ * getApiUrl("login")
+ * getApiUrl("/login")
+ *
+ * Both become:
+ * https://your-api.com/login
  */
-export const getApiUrl = (path) => {
-  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+export const getApiUrl = (path = "") => {
+  const cleanPath = path.replace(/^\/+/, "");
   return `${API_BASE_URL}/${cleanPath}`;
 };
