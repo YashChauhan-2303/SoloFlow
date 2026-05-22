@@ -36,12 +36,12 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
+  hidden: { y: 8, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
     transition: {
-      duration: 0.6,
+      duration: 0.4,
       ease: [0.16, 1, 0.3, 1]
     }
   }
@@ -128,23 +128,15 @@ function Landing() {
       {/* Noise background */}
       <div className="noise-overlay" />
 
-      {/* Decorative Orbs */}
+      {/* Decorative Orbs - Static Hardware-Accelerated Glowing layers for perfect performance */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <motion.div
-          animate={{
-            x: [0, 80, -40, 0],
-            y: [0, -80, 40, 0],
-          }}
-          transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-[-10%] left-[15%] w-[500px] h-[500px] bg-purple-600/10 rounded-full filter blur-[120px] opacity-40"
+        <div
+          className="absolute top-[-10%] left-[15%] w-[500px] h-[500px] bg-purple-600/10 rounded-full filter blur-[120px] opacity-40 transform-gpu"
+          style={{ willChange: 'transform, opacity' }}
         />
-        <motion.div
-          animate={{
-            x: [0, -80, 40, 0],
-            y: [0, 80, -40, 0],
-          }}
-          transition={{ duration: 30, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-[10%] right-[10%] w-[600px] h-[600px] bg-indigo-600/10 rounded-full filter blur-[140px] opacity-40"
+        <div
+          className="absolute bottom-[10%] right-[10%] w-[600px] h-[600px] bg-indigo-600/10 rounded-full filter blur-[140px] opacity-40 transform-gpu"
+          style={{ willChange: 'transform, opacity' }}
         />
       </div>
 
@@ -162,7 +154,8 @@ function Landing() {
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
-                  className="lg:col-span-7 space-y-6 text-left"
+                  className="lg:col-span-7 space-y-6 text-left transform-gpu"
+                  style={{ willChange: 'transform, opacity' }}
                 >
                   <motion.div variants={itemVariants}>
                     <Badge variant="primary" size="sm" icon={Zap}>
@@ -229,19 +222,24 @@ function Landing() {
 
                 {/* Hero Graphical Showcase */}
                 <motion.div 
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="lg:col-span-5 relative"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                  className="lg:col-span-5 relative transform-gpu"
+                  style={{ willChange: 'transform, opacity' }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-tr from-violet-500/20 to-indigo-500/20 blur-2xl rounded-3xl" />
                   
-                  {/* Hero Image frame */}
-                  <div className="relative border border-slate-800 rounded-3xl overflow-hidden shadow-2xl bg-slate-950/80 p-3">
+                  {/* Hero Image frame - CLS prevented by height reservation */}
+                  <div className="relative border border-slate-800 rounded-3xl overflow-hidden shadow-2xl bg-slate-950/80 p-3 h-[344px] sm:h-[424px] transform-gpu" style={{ willChange: 'transform' }}>
                     <img 
                       src={img2_girl} 
                       alt="SoloFlow Showcase" 
                       className="w-full h-80 sm:h-[400px] object-cover rounded-2xl filter brightness-90 contrast-105"
+                      loading="eager"
+                      fetchpriority="high"
+                      width={600}
+                      height={400}
                     />
                     
                     {/* Floating badge */}
@@ -321,11 +319,12 @@ function Landing() {
                 ].map((item, idx) => (
                   <motion.div
                     key={idx}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1, duration: 0.5 }}
-                    className="group"
+                    transition={{ delay: idx * 0.08, duration: 0.4, ease: "easeOut" }}
+                    className="group transform-gpu"
+                    style={{ willChange: 'transform, opacity' }}
                   >
                     <Card
                       variant="default"
