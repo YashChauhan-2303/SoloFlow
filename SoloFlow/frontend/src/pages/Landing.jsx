@@ -208,9 +208,9 @@ function Landing() {
                     className="grid grid-cols-3 gap-6 pt-10 border-t border-slate-900"
                   >
                     {[
-                      { label: 'Active Users', value: '1.2K+' },
-                      { label: 'Tasks Mapped', value: '45K+' },
-                      { label: 'Invoices Sent', value: '₹800K+' },
+                      { label: 'Client Management', value: 'CRM' },
+                      { label: 'Task Tracking', value: 'Kanban' },
+                      { label: 'Invoice Generation', value: 'Automated' },
                     ].map((stat, i) => (
                       <div key={i} className="text-left">
                         <div className="text-2xl sm:text-3xl font-extrabold text-violet-400 tracking-tight">{stat.value}</div>
