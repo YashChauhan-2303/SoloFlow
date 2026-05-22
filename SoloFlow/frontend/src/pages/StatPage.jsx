@@ -17,6 +17,7 @@ import {
 import { BarChart3, Calendar, Award, Zap, TrendingUp, HelpCircle } from "lucide-react";
 import { AppLayout, PageContainer, PageHeader, PageGrid } from "../components/layouts";
 import { Card, Skeleton, Button } from "../components/ui";
+import { getApiUrl } from "../utils/api";
 
 // Chart configurations matching existing endpoints
 const CHARTS = [
@@ -172,7 +173,7 @@ function StatPage() {
         return arr;
       });
 
-      fetch(`http://localhost:3000/stats/projects-${chart.endpoint}/${user_id}`, {
+      fetch(getApiUrl(`stats/projects-${chart.endpoint}/${user_id}`), {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((res) => {
@@ -204,7 +205,7 @@ function StatPage() {
   // Fetch heatmap activities data
   useEffect(() => {
     setHeatmapLoading(true);
-    fetch(`http://localhost:3000/${user_id}/statistics`, {
+    fetch(getApiUrl(`${user_id}/statistics`), {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
@@ -221,7 +222,7 @@ function StatPage() {
   // Fetch weekly deadlines data
   useEffect(() => {
     setWeeklyDeadlineLoading(true);
-    fetch(`http://localhost:3000/stats/weekly-deadlines/${user_id}`, {
+    fetch(getApiUrl(`stats/weekly-deadlines/${user_id}`), {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {

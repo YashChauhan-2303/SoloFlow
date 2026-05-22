@@ -20,11 +20,11 @@ async function registerUser(req, res) {
     
 
 
- //   const hashedPassword = await bcrypt.hash(user_password, 10);
+    const hashedPassword = await bcrypt.hash(user_password, 10);
     const newUser = new User({
       user_name: user_name,
       user_email: user_email,
-      user_password:user_password, 
+      user_password: hashedPassword, 
       user_company: user_company
     });
 

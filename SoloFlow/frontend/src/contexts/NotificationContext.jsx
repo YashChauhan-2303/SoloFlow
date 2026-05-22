@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
+import { getApiUrl } from "../utils/api";
 
 const NotificationContext = createContext();
 
@@ -20,7 +21,7 @@ export function NotificationProvider({ children }) {
 
     const fetchNotifications = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/${user_id}/notifications`, {
+        const res = await fetch(getApiUrl(`${user_id}/notifications`), {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();

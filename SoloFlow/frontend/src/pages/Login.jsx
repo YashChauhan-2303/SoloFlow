@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { Button, Input } from "../components/ui";
+import { getApiUrl } from "../utils/api";
 
 function Login() {
   const [show, setShow] = useState(false);
@@ -29,7 +30,7 @@ function Login() {
     };
 
     try {
-      const response = await fetch('http://localhost:3000/login', {
+      const response = await fetch(getApiUrl('login'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

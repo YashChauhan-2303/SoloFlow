@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { FileText, Send, ArrowLeft, Mail, Calendar, User, Building, Receipt } from 'lucide-react';
 import { AppLayout, PageContainer, PageHeader } from '../components/layouts';
 import { Card, Button, Skeleton } from '../components/ui';
+import { getApiUrl } from '../utils/api';
 
 function InvoicePage() {
   const { user_id, client_id, project_id } = useParams();
@@ -19,7 +20,7 @@ function InvoicePage() {
   // Fetch invoice details
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:3000/${user_id}/${client_id}/${project_id}/viewinvoice`, {
+    fetch(getApiUrl(`${user_id}/${client_id}/${project_id}/viewinvoice`), {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -56,7 +57,7 @@ function InvoicePage() {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/${user_id}/${invoiceData._id}/email`,
+        getApiUrl(`${user_id}/${invoiceData._id}/email`),
         {
           method: 'POST',
           headers: {
@@ -233,7 +234,7 @@ function InvoicePage() {
                           {item.task_name || 'Deliverable Task'}
                         </td>
                         <td className="py-4 px-4 text-right text-slate-100 font-bold">
-                          ${item.task_amount?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                          ₹{item.task_amount?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                         </td>
                       </tr>
                     ))
@@ -254,7 +255,7 @@ function InvoicePage() {
                 <div className="flex justify-between items-center text-slate-400 text-xs font-semibold uppercase tracking-wider">
                   <span>Grand Total</span>
                   <span className="text-xl font-extrabold text-white">
-                    ${invoiceData?.invoice_amount?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                    ₹{invoiceData?.invoice_amount?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                   </span>
                 </div>
               </div>

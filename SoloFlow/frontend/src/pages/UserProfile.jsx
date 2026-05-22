@@ -6,6 +6,7 @@ import { Camera, Mail, Building, Clock, Edit3, Save, LogOut, ArrowLeft } from 'l
 import user_img from '../assets/user_img.jpg';
 import { AppLayout, PageContainer, PageHeader } from '../components/layouts';
 import { Card, Avatar, Input, Textarea, Button } from '../components/ui';
+import { getApiUrl } from '../utils/api';
 
 function UserProfile() {
   const { user_id } = useParams();
@@ -29,7 +30,7 @@ function UserProfile() {
   // Fetch Profile data
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:3000/user/${user_id}`, {
+    fetch(getApiUrl(`user/${user_id}`), {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -72,7 +73,7 @@ function UserProfile() {
     setIsSaving(true);
 
     try {
-      const response = await fetch(`http://localhost:3000/user/${user_id}`, {
+      const response = await fetch(getApiUrl(`user/${user_id}`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

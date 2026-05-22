@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Briefcase,
   Calendar,
-  DollarSign,
+  IndianRupee,
   Users,
   X,
   LayoutDashboard,
@@ -20,6 +20,7 @@ import {
 import PageTransition from '../components/PageTransition';
 import { AppLayout, PageContainer, PageHeader } from '../components/layouts';
 import { Card, Button, Input, Select, Textarea, Modal, Badge, StatCard } from '../components/ui';
+import { getApiUrl } from '../utils/api';
 
 const Dashboard = () => {
   const { user_id } = useParams();
@@ -79,7 +80,7 @@ const Dashboard = () => {
   // Fetch tasks from API
   const fetchTasks = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/${user_id}/dashboard`, {
+      const response = await fetch(getApiUrl(`${user_id}/dashboard`), {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -129,7 +130,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (selectedClient) {
       setLoadingProjects(true);
-      fetch(`http://localhost:3000/${user_id}/${selectedClient}/projectdropdown`, {
+      fetch(getApiUrl(`${user_id}/${selectedClient}/projectdropdown`), {
         headers: { Authorization: `Bearer ${token}` }
       })
         .then(res => res.json())
@@ -152,7 +153,7 @@ const Dashboard = () => {
   // Fetch clients when modal opens
   useEffect(() => {
     if (showTaskModal) {
-      fetch(`http://localhost:3000/${user_id}/clients`, {
+      fetch(getApiUrl(`${user_id}/clients`), {
         headers: { Authorization: `Bearer ${token}` }
       })
         .then(res => res.json())
@@ -165,7 +166,7 @@ const Dashboard = () => {
   const handleRegularDrop = async (taskId, fromBoardId, toBoardId) => {
     const newPriority = boardStatusMapping[toBoardId];
     try {
-      const response = await fetch(`http://localhost:3000/${user_id}/${taskId}/priority`, {
+      const response = await fetch(getApiUrl(`${user_id}/${taskId}/priority`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -213,7 +214,7 @@ const Dashboard = () => {
   // Handler for review board drops
   const handleReviewDrop = async (taskId, fromBoardId) => {
     try {
-      const statusResponse = await fetch(`http://localhost:3000/${user_id}/${taskId}/status`, {
+      const statusResponse = await fetch(getApiUrl(`${user_id}/${taskId}/status`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -305,7 +306,7 @@ const Dashboard = () => {
     if (!currentTask) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/${user_id}/${currentTask._id}/price`, {
+      const response = await fetch(getApiUrl(`${user_id}/${currentTask._id}/price`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -354,7 +355,7 @@ const Dashboard = () => {
 
   const formatPrice = (price) => {
     if (!price || price === 0) return '';
-    return `$${price.toLocaleString()}`;
+    return `₹${price.toLocaleString()}`;
   };
 
   // Stats calculations
@@ -424,8 +425,8 @@ const Dashboard = () => {
             />
             <StatCard
               title="Potential Revenue"
-              value={`$${potentialRevenue.toLocaleString()}`}
-              icon={DollarSign}
+              value={`₹${potentialRevenue.toLocaleString()}`}
+              icon={IndianRupee}
             />
           </div>
 
@@ -577,12 +578,12 @@ const Dashboard = () => {
 
             <div>
               <Input
-                label="Billable Rate / Task Price ($)"
+                label="Billable Rate / Task Price (₹)"
                 placeholder="0.00"
                 type="number"
                 value={taskPrice}
                 onChange={(e) => setTaskPrice(e.target.value)}
-                icon={DollarSign}
+                icon={IndianRupee}
                 min="0"
                 step="0.01"
               />
@@ -629,7 +630,7 @@ const Dashboard = () => {
               };
               
               try {
-                const response = await fetch(`http://localhost:3000/${user_id}/${selectedClient}/addtask`, {
+                const response = await fetch(getApiUrl(`${user_id}/${selectedClient}/addtask`), {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',

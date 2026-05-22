@@ -6,6 +6,7 @@ import { Briefcase, Plus, Search, Clock, Calendar, AlertCircle } from 'lucide-re
 import ProjectCard from '../components/ProjectCard';
 import { AppLayout, PageContainer, PageHeader, PageGrid } from '../components/layouts';
 import { Input, Textarea, Modal, Button, EmptyState, Skeleton } from '../components/ui';
+import { getApiUrl } from '../utils/api';
 
 function ClientProjects() {
   const { user_id, client_id } = useParams();
@@ -31,7 +32,7 @@ function ClientProjects() {
     const fetchProjects = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/${user_id}/${client_id}/projects`,
+          getApiUrl(`${user_id}/${client_id}/projects`),
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -66,7 +67,7 @@ function ClientProjects() {
     };
 
     try {
-      const response = await fetch(`http://localhost:3000/${user_id}/${client_id}/addproject`, {
+      const response = await fetch(getApiUrl(`${user_id}/${client_id}/addproject`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -98,7 +99,7 @@ function ClientProjects() {
   const handleDeleteProject = async (projectId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/${user_id}/${projectId}/deleteproject`,
+        getApiUrl(`${user_id}/${projectId}/deleteproject`),
         {
           method: 'DELETE',
           headers: {

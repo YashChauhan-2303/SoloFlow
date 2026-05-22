@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import ClientCard from '../components/ClientCard';
 import { AppLayout, PageContainer, PageHeader, PageGrid } from '../components/layouts';
 import { Input, Textarea, Modal, Button, EmptyState, Skeleton } from '../components/ui';
+import { getApiUrl } from '../utils/api';
 
 function Clients() {
   const { user_id } = useParams();
@@ -28,7 +29,7 @@ function Clients() {
   // Fetch clients from the backend API
   const fetchClients = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/${user_id}/clients`, {
+      const response = await fetch(getApiUrl(`${user_id}/clients`), {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -62,7 +63,7 @@ function Clients() {
     };
 
     try {
-      const response = await fetch(`http://localhost:3000/${user_id}/addclient`, {
+      const response = await fetch(getApiUrl(`${user_id}/addclient`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -98,7 +99,7 @@ function Clients() {
   // Handle client deletion
   const handleDelete = async (client_id) => {
     try {
-      const response = await fetch(`http://localhost:3000/${user_id}/${client_id}/deleteclient`, {
+      const response = await fetch(getApiUrl(`${user_id}/${client_id}/deleteclient`), {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,

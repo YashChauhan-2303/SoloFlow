@@ -37,16 +37,8 @@ async function user_login(req, res) {
 
   
 
-  //  const isMatch = await bcrypt.compare(password, user.user_password);
-  //  if (!isMatch) {
-  //    return res.status(401).json({ message: "Invalid password" });
-  //  }
-
-  //   console.log("Stored password:", user.user_password);  
- //   console.log("Password match:", password === user.user_password);  
-
-  const isMatch = password === user.user_password;
-    if (!isMatch) {   
+    const isMatch = await bcrypt.compare(password, user.user_password);
+    if (!isMatch) {
       return res.status(401).json({ message: "Invalid password" });
     }
 

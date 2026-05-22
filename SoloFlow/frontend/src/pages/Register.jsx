@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { User, Mail, Lock, Building2, UserPlus, Eye, EyeOff } from 'lucide-react';
 import { Button, Input } from '../components/ui';
+import { getApiUrl } from '../utils/api';
 import '../App.css';
 
 function Register() {
@@ -56,7 +57,7 @@ function Register() {
     };
 
     try {
-      const response = await fetch('http://localhost:3000/register', {
+      const response = await fetch(getApiUrl('register'), {
         method: 'POST',
         headers: {
           'Content-type': 'application/json'

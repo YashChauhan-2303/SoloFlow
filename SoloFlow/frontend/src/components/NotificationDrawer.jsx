@@ -4,6 +4,7 @@ import { Trash2, X, Bell } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useNotification } from "../contexts/NotificationContext";
 import { Button } from "./ui";
+import { getApiUrl } from "../utils/api";
 
 export default function NotificationDrawer() {
   const {
@@ -21,7 +22,7 @@ export default function NotificationDrawer() {
   // Fetch notifications from backend when drawer opens
   useEffect(() => {
     if (drawerOpen && user_id && token) {
-      fetch(`http://localhost:3000/${user_id}/notifications`, {
+      fetch(getApiUrl(`${user_id}/notifications`), {
         headers: { Authorization: `Bearer ${token}` }
       })
         .then((res) => res.json())

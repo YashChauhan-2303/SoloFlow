@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
 import { Briefcase, Calendar, Eye, FileText, Trash2, User, ArrowRight } from 'lucide-react';
 import { Card, Badge, Button } from './ui';
+import { getApiUrl } from '../utils/api';
 
 function ProjectCard({ 
   project = {
@@ -53,7 +54,7 @@ function ProjectCard({
 
     try {
       const response = await fetch(
-        `http://localhost:3000/${project.user_id}/${project.client_id}/${project.project_id}/addinvoice`,
+        getApiUrl(`${project.user_id}/${project.client_id}/${project.project_id}/addinvoice`),
         {
           method: 'POST',
           headers: {

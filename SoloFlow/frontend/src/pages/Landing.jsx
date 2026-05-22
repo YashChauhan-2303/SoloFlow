@@ -12,7 +12,7 @@ import {
   Mail,
   Phone,
   Share2,
-  DollarSign,
+  IndianRupee,
   Play,
   ArrowRight
 } from 'lucide-react';
@@ -217,7 +217,7 @@ function Landing() {
                     {[
                       { label: 'Active Users', value: '1.2K+' },
                       { label: 'Tasks Mapped', value: '45K+' },
-                      { label: 'Invoices Sent', value: '$800K+' },
+                      { label: 'Invoices Sent', value: '₹800K+' },
                     ].map((stat, i) => (
                       <div key={i} className="text-left">
                         <div className="text-2xl sm:text-3xl font-extrabold text-violet-400 tracking-tight">{stat.value}</div>
@@ -247,11 +247,11 @@ function Landing() {
                     {/* Floating badge */}
                     <div className="absolute bottom-6 left-6 right-6 p-4 bg-slate-950/90 backdrop-blur-xl border border-white/[0.06] rounded-2xl shadow-xl flex items-center gap-3">
                       <div className="h-10 w-10 rounded-xl bg-violet-600/10 flex items-center justify-center border border-violet-500/20">
-                        <DollarSign className="text-violet-400" size={20} />
+                        <IndianRupee className="text-violet-400" size={20} />
                       </div>
                       <div className="text-left flex-1 min-w-0">
                         <p className="text-xs text-slate-500 font-medium">Monthly Revenue</p>
-                        <p className="text-sm font-bold text-slate-100">$6,450.00</p>
+                        <p className="text-sm font-bold text-slate-100">₹6,450.00</p>
                       </div>
                       <Badge variant="success" size="xs">
                         +14%
@@ -295,7 +295,7 @@ function Landing() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
                   {
-                    icon: DollarSign,
+                    icon: IndianRupee,
                     title: "Invoicing",
                     desc: "Generate professional billing records in one click. Custom templates and PDF rendering built in.",
                     color: "group-hover:text-emerald-400"
