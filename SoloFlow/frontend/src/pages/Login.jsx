@@ -135,6 +135,7 @@ function Login() {
                     onClick={() => setShow(!show)}
                     className="text-slate-400 hover:text-slate-200 transition-colors p-1"
                     tabIndex={-1}
+                    aria-label="Toggle Password"
                   >
                     {show ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>

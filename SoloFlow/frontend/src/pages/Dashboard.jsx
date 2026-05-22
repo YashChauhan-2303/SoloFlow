@@ -48,15 +48,15 @@ const Dashboard = () => {
   const [selectedProject, setSelectedProject] = useState('');
   const [taskName, setTaskName] = useState('');
   const [taskDesc, setTaskDesc] = useState('');
-  const [taskPriority, setTaskPriority] = useState(1);
+  const [taskPriority, setTaskPriority] = useState(3);
   const [loadingProjects, setLoadingProjects] = useState(false);
   const [addingTask, setAddingTask] = useState(false);
 
   // Board to status mapping (using numbers as per original model)
   const boardStatusMapping = {
-    backlog: 1,
-    todo: 3,
-    inProgress: 2,
+    backlog: 3,
+    todo: 2,
+    inProgress: 1,
     review: 4
   };
 
@@ -104,9 +104,9 @@ const Dashboard = () => {
 
       tasks.forEach(task => {
         if (task.task_status === false) {
-          if (task.task_priority === 1) updatedBoards.backlog.tasks.push(task);
-          else if (task.task_priority === 3) updatedBoards.todo.tasks.push(task);
-          else if (task.task_priority === 2) updatedBoards.inProgress.tasks.push(task);
+          if (task.task_priority === 3) updatedBoards.backlog.tasks.push(task);
+          else if (task.task_priority === 2) updatedBoards.todo.tasks.push(task);
+          else if (task.task_priority === 1) updatedBoards.inProgress.tasks.push(task);
         } else {
           updatedBoards.review.tasks.push(task);
         }
@@ -646,7 +646,7 @@ const Dashboard = () => {
                   setShowTaskModal(false);
                   setTaskName('');
                   setTaskDesc('');
-                  setTaskPriority(1);
+                  setTaskPriority(3);
                   setSelectedClient('');
                   setSelectedProject('');
                   toast.success('Task added successfully', { toastId: 'task-success' });
@@ -715,9 +715,9 @@ const Dashboard = () => {
               value={taskPriority}
               onChange={(e) => setTaskPriority(Number(e.target.value))}
               options={[
-                { value: 1, label: 'Backlog' },
-                { value: 3, label: 'To Do' },
-                { value: 2, label: 'In Progress' }
+                { value: 3, label: 'Backlog' },
+                { value: 2, label: 'To Do' },
+                { value: 1, label: 'In Progress' }
               ]}
               placeholder=""
             />

@@ -304,7 +304,7 @@ const LandingModern = () => {
             ))}
           </div>
           <div className="border-t border-slate-700/50 pt-8 text-center text-slate-500">
-            <p>&copy; 2026 SoloFlow. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} SoloFlow. All rights reserved.</p>
           </div>
         </PageContainer>
       </motion.footer>

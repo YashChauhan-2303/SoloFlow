@@ -316,7 +316,7 @@ function UserProfile() {
 
         {/* Elegant Minimal Footer */}
         <footer className="py-12 mt-12 text-center text-xs text-slate-600 border-t border-white/[0.03]">
-          © 2026 SoloFlow. All rights reserved. Powered by premium management frameworks.
+          © {new Date().getFullYear()} SoloFlow. All rights reserved. Powered by premium management frameworks.
         </footer>
       </PageContainer>
     </AppLayout>

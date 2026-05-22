@@ -1,13 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-function Footer({ darkMode }) {
+function Footer() {
   return (
-    <div className={`max-w-full bottom-0 backdrop-blur-3xl flex flex-wrap p-4 mt-4 flex-col justify-center items-center transition-colors duration-300 ${
-      darkMode ? 'bg-gray-800 text-gray-200' : 'bg-blue-900 text-white'
-    }`}>
-      2025 SoloFlow. All rights reserved.
-    </div>
-  )
+    <footer className="w-full py-8 mt-12 text-center text-sm text-slate-500 border-t border-white/[0.05] bg-[#0a0a0f]/40 backdrop-blur-xl">
+      © {new Date().getFullYear()} SoloFlow. All rights reserved.
+    </footer>
+  );
 }
 
-export default Footer
+export default Footer;

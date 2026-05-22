@@ -2,12 +2,6 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 import Register from './Register';
-import { useTheme } from '../contexts/ThemeContext';
-
-// Mock the theme context
-vi.mock('../contexts/ThemeContext', () => ({
-  useTheme: vi.fn()
-}));
 
 // Mock react-router-dom navigate
 const mockNavigate = vi.fn();
@@ -52,12 +46,6 @@ describe('Register Component', () => {
   beforeEach(() => {
     // Reset all mocks before each test
     vi.clearAllMocks();
-    
-    // Mock theme context default values
-    useTheme.mockReturnValue({
-      darkMode: false,
-      toggleDarkMode: vi.fn()
-    });
   });
 
   // Test 1: Component renders correctly with all form fields
@@ -122,7 +110,7 @@ describe('Register Component', () => {
     );
 
     const passwordInput = screen.getByLabelText('Password');
-    const toggleButton = screen.getByAltText('Toggle Password');
+    const toggleButton = screen.getByLabelText('Toggle Password');
 
     // Initially password should be hidden
     expect(passwordInput.type).toBe('password');
@@ -182,31 +170,6 @@ describe('Register Component', () => {
         })
       });
       expect(mockNavigate).toHaveBeenCalledWith('/login');
-    });
   });
-
-  // Test 5: Dark mode toggle functionality
-  test('dark mode toggle changes theme', () => {
-    const mockToggleDarkMode = vi.fn();
-    
-    // Mock dark mode as true
-    useTheme.mockReturnValue({
-      darkMode: true,
-      toggleDarkMode: mockToggleDarkMode
-    });
-
-    render(
-      <TestWrapper>
-        <Register />
-      </TestWrapper>
-    );
-
-    const toggleButton = screen.getByLabelText('Toggle dark mode');
-    
-    // Click the dark mode toggle
-    fireEvent.click(toggleButton);
-    
-    // Verify the toggle function was called
-    expect(mockToggleDarkMode).toHaveBeenCalledTimes(1);
-  });
+});
 });

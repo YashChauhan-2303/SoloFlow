@@ -2,13 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { User, Mail, Lock, Building2, UserPlus, Sun } from 'lucide-react';
+import { User, Mail, Lock, Building2, UserPlus, Eye, EyeOff } from 'lucide-react';
 import { Button, Input } from '../components/ui';
-import { useTheme } from '../contexts/ThemeContext';
 import '../App.css';
 
 function Register() {
-  const { darkMode, toggleDarkMode } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [passwordChecks, setPasswordChecks] = useState({
     length: false,
@@ -87,17 +85,6 @@ function Register() {
       <div className="sf-dot-grid" />
       <div className="noise-overlay absolute inset-0 opacity-[0.02] pointer-events-none" />
 
-      {/* Dark Mode Toggle (Required by Tests) */}
-      <div className="absolute top-4 right-4 z-20">
-        <button
-          onClick={toggleDarkMode}
-          className="p-2.5 rounded-xl bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] text-slate-300 transition-colors"
-          aria-label="Toggle dark mode"
-        >
-          <Sun className="h-4 w-4" />
-        </button>
-      </div>
-
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={formLoaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -163,12 +150,9 @@ function Register() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="text-slate-400 hover:text-slate-200 transition-colors p-1"
                     tabIndex={-1}
+                    aria-label="Toggle Password"
                   >
-                    <img
-                      src={showPassword ? "/eye-open.png" : "/eye-closed.png"}
-                      alt="Toggle Password"
-                      className="w-5 h-5 opacity-70 invert"
-                    />
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 }
               />
