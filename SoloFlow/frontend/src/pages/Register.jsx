@@ -1,12 +1,14 @@
-import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
-import { FiMoon, FiSun } from 'react-icons/fi';
+import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import '../App.css';
+import { User, Mail, Lock, Building2, UserPlus, Sun } from 'lucide-react';
+import { Button, Input } from '../components/ui';
 import { useTheme } from '../contexts/ThemeContext';
+import '../App.css';
 
 function Register() {
+  const { darkMode, toggleDarkMode } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [passwordChecks, setPasswordChecks] = useState({
     length: false,
@@ -17,22 +19,19 @@ function Register() {
   });
 
   const handlePasswordChange = (e) => {
-  const val = e.target.value;
-  setPassword(val);
-  const checks = {
-    length: val.length >= 8 && val.length <= 20,
-    upper: /[A-Z]/.test(val),
-    lower: /[a-z]/.test(val),
-    number: /\d/.test(val),
-    symbol: /[\W_]/.test(val),
+    const val = e.target.value;
+    setPassword(val);
+    const checks = {
+      length: val.length >= 8 && val.length <= 20,
+      upper: /[A-Z]/.test(val),
+      lower: /[a-z]/.test(val),
+      number: /\d/.test(val),
+      symbol: /[\W_]/.test(val),
+    };
+    setPasswordChecks(checks);
+    setVerifyPassword(Object.values(checks).every(Boolean));
   };
-  setPasswordChecks(checks);
-  setVerifyPassword(Object.values(checks).every(Boolean));
-};
 
-
-
-  const { darkMode, toggleDarkMode } = useTheme();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -40,20 +39,24 @@ function Register() {
   const [verifyPassword, setVerifyPassword] = useState();
   const [passwordTouched, setPasswordTouched] = useState(false);
   const [formLoaded, setFormLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     setFormLoaded(true);
   }, []);
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     const newUser = {
       user_name: name,
       user_email: email,
       user_password: password,
       user_company: company
     };
+
     try {
       const response = await fetch('http://localhost:3000/register', {
         method: 'POST',
@@ -69,289 +72,163 @@ function Register() {
       } else {
         toast.error(`${res.message}`);
       }
-    } catch(err) {
+    } catch (err) {
       toast.error(err.message);
-    }
-  };
-  
-  const passwordHandler = (e) => {
-    setPassword(e.target.value);
-    if (
-      e.target.value.length < 8 ||
-      e.target.value.length > 20 ||
-      e.target.value.includes(' ') ||
-      !/[A-Z]/.test(e.target.value) ||      // at least one uppercase
-      !/[a-z]/.test(e.target.value) ||      // at least one lowercase
-      !/\d/.test(e.target.value) ||         // at least one digit
-      !/[\W_]/.test(e.target.value)) {
-        setVerifyPassword(false);
-      } else {
-        setVerifyPassword(true);
-      }
-  };
-
-  // Animation variants matching the Login component
-  const placeholderVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut"
-      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className={`
-      w-full min-h-screen transition-colors duration-300 
-      ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-800'}
-    `}>
-      {/* Dark Mode Toggle */}
-      <div className="flex justify-end p-4">
+    <div className="w-full min-h-screen bg-[#0a0a0f] text-slate-100 flex items-center justify-center relative overflow-hidden py-12 px-4 sm:px-6 lg:px-8 animate-fade-in">
+      {/* Ambient Glowing Orbs */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="sf-dot-grid" />
+      <div className="noise-overlay absolute inset-0 opacity-[0.02] pointer-events-none" />
+
+      {/* Dark Mode Toggle (Required by Tests) */}
+      <div className="absolute top-4 right-4 z-20">
         <button
           onClick={toggleDarkMode}
-          className={`p-2 rounded-full ${
-            darkMode ? 'bg-gray-700 text-yellow-300' : 'bg-white text-gray-700'
-          } shadow-md hover:shadow-lg transition-all`}
+          className="p-2.5 rounded-xl bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.1] text-slate-300 transition-colors"
           aria-label="Toggle dark mode"
         >
-          {darkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
+          <Sun className="h-4 w-4" />
         </button>
       </div>
-          
-      {/* Register Form Container */}
-      <div className="flex items-center justify-center p-4">
-        <div className={`
-          w-full max-w-md p-8 rounded-2xl shadow-xl transition-all
-          ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-blue-200'} border
-        `}>
-          <motion.h2
-            initial={{ opacity: 0, y: -20 }}
-            animate={formLoaded ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-            className={`
-              text-2xl font-bold mb-6 text-center
-              ${darkMode ? 'text-white' : 'text-blue-800'}
-            `}
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={formLoaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="w-full max-w-md z-10 animate-fade-in"
+      >
+        {/* Header */}
+        <div className="flex flex-col items-center mb-8 text-center">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, type: 'spring' }}
+            className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-500 shadow-xl shadow-violet-500/20 mb-4"
           >
+            <span className="text-xl font-bold text-white select-none">S</span>
+          </motion.div>
+          <h2 className="text-3xl font-bold text-white tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
             Create your SoloFlow Account
-          </motion.h2>
+          </h2>
+          <p className="text-slate-400 text-sm mt-2">
+            Join SoloFlow to streamline your freelancing workflow
+          </p>
+        </div>
 
-          <form onSubmit={handleSubmit}>
-            {/* Name */}
-            <motion.div 
-              className="mb-4"
-              initial={{ opacity: 0 }}
-              animate={formLoaded ? { opacity: 1 } : {}}
-              transition={{ delay: 0.2 }}
-            >
-              <motion.label
-                variants={placeholderVariants}
-                initial="hidden"
-                animate={formLoaded ? "visible" : "hidden"}
-                className={`
-                  block mb-2 text-sm font-medium
-                  ${darkMode ? 'text-gray-300' : 'text-gray-700'}
-                `}
-              >
-                Full Name
-              </motion.label>
-              <motion.input
-                variants={placeholderVariants}
-                initial="hidden"
-                animate={formLoaded ? "visible" : "hidden"}
-                transition={{ delay: 0.3 }}
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                name="name"
-                required
-                className={`
-                  w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 transition-all
-                  ${darkMode ? 'bg-gray-700 border-gray-600 focus:ring-blue-500 text-white' :
-                    'bg-white border-gray-300 focus:ring-blue-300 text-gray-800'}
-                `}
-              />
-            </motion.div>
+        {/* Register Card */}
+        <div className="bg-slate-900/60 backdrop-blur-xl border border-white/[0.08] shadow-2xl shadow-purple-500/5 p-8 rounded-2xl">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <Input
+              label="Full Name"
+              placeholder="John Doe"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              name="name"
+              icon={User}
+              required
+            />
 
-            {/* Email */}
-            <motion.div 
-              className="mb-4"
-              initial={{ opacity: 0 }}
-              animate={formLoaded ? { opacity: 1 } : {}}
-              transition={{ delay: 0.3 }}
-            >
-              <motion.label
-                variants={placeholderVariants}
-                initial="hidden"
-                animate={formLoaded ? "visible" : "hidden"}
-                className={`
-                  block mb-2 text-sm font-medium
-                  ${darkMode ? 'text-gray-300' : 'text-gray-700'}
-                `}
-              >
-                Email
-              </motion.label>
-              <motion.input
-                variants={placeholderVariants}
-                initial="hidden"
-                animate={formLoaded ? "visible" : "hidden"}
-                transition={{ delay: 0.4 }}
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                name="email"
-                required
-                className={`
-                  w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 transition-all
-                  ${darkMode ? 'bg-gray-700 border-gray-600 focus:ring-blue-500 text-white' :
-                    'bg-white border-gray-300 focus:ring-blue-300 text-gray-800'}
-                `}
-              />
-            </motion.div>
+            <Input
+              label="Email"
+              placeholder="name@company.com"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              icon={Mail}
+              required
+            />
 
-            {/* Password */}
-            <motion.div 
-              className="mb-6 relative"
-              initial={{ opacity: 0 }}
-              animate={formLoaded ? { opacity: 1 } : {}}
-              transition={{ delay: 0.4 }}
-            >
-              <motion.label
-                variants={placeholderVariants}
-                initial="hidden"
-                animate={formLoaded ? "visible" : "hidden"}
-                className={`
-                  block mb-2 text-sm font-medium
-                  ${darkMode ? 'text-gray-300' : 'text-gray-700'}
-                `}
-              >
-                Password
-              </motion.label>
-              <motion.input
-                variants={placeholderVariants}
-                initial="hidden"
-                animate={formLoaded ? "visible" : "hidden"}
-                transition={{ delay: 0.5 }}
+            <div>
+              <Input
+                label="Password"
+                placeholder="••••••••"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={handlePasswordChange}
                 onFocus={() => setPasswordTouched(true)}
+                icon={Lock}
                 required
-                className={`
-                  w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 transition-all pr-10
-                  ${darkMode 
-                    ? 'bg-gray-700 border-gray-600 text-white focus:ring-blue-500'
-                    : 'bg-white border-gray-300 text-gray-800 focus:ring-blue-300'}
-                `}
+                rightElement={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-slate-400 hover:text-slate-200 transition-colors p-1"
+                    tabIndex={-1}
+                  >
+                    <img
+                      src={showPassword ? "/eye-open.png" : "/eye-closed.png"}
+                      alt="Toggle Password"
+                      className="w-5 h-5 opacity-70 invert"
+                    />
+                  </button>
+                }
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-10"
-              >
-                <img
-                  src={showPassword ? "/eye-open.png" : "/eye-closed.png"}
-                  alt="Toggle Password"
-                  className="w-5 h-5 opacity-70"
-                />
-              </button>
 
               {/* Password rule indicators */}
               {passwordTouched && (
                 <div className="mt-3 text-sm space-y-1">
-                  <p className={passwordChecks.length ? "text-green-500" : "text-red-500"}>
-                    {passwordChecks.length ? "✔" : "✘"} At least 8 characters
+                  <p className={passwordChecks.length ? "text-emerald-400" : "text-red-400"}>
+                    {passwordChecks.length ? "✔ At least 8 characters" : "✘ At least 8 characters"}
                   </p>
-                  <p className={passwordChecks.upper ? "text-green-500" : "text-red-500"}>
-                    {passwordChecks.upper ? "✔" : "✘"} At least one uppercase letter
+                  <p className={passwordChecks.upper ? "text-emerald-400" : "text-red-400"}>
+                    {passwordChecks.upper ? "✔ At least one uppercase letter" : "✘ At least one uppercase letter"}
                   </p>
-                  <p className={passwordChecks.lower ? "text-green-500" : "text-red-500"}>
-                    {passwordChecks.lower ? "✔" : "✘"} At least one lowercase letter
+                  <p className={passwordChecks.lower ? "text-emerald-400" : "text-red-400"}>
+                    {passwordChecks.lower ? "✔ At least one lowercase letter" : "✘ At least one lowercase letter"}
                   </p>
-                  <p className={passwordChecks.number ? "text-green-500" : "text-red-500"}>
-                    {passwordChecks.number ? "✔" : "✘"} At least one number
+                  <p className={passwordChecks.number ? "text-emerald-400" : "text-red-400"}>
+                    {passwordChecks.number ? "✔ At least one number" : "✘ At least one number"}
                   </p>
-                  <p className={passwordChecks.symbol ? "text-green-500" : "text-red-500"}>
-                    {passwordChecks.symbol ? "✔" : "✘"} At least one special character
+                  <p className={passwordChecks.symbol ? "text-emerald-400" : "text-red-400"}>
+                    {passwordChecks.symbol ? "✔ At least one special character" : "✘ At least one special character"}
                   </p>
                 </div>
               )}
-            </motion.div>
+            </div>
 
-            {/* Company name */}
-            <motion.div 
-              className="mb-6"
-              initial={{ opacity: 0 }}
-              animate={formLoaded ? { opacity: 1 } : {}}
-              transition={{ delay: 0.5 }}
-            >
-              <motion.label
-                variants={placeholderVariants}
-                initial="hidden"
-                animate={formLoaded ? "visible" : "hidden"}
-                className={`
-                  block mb-2 text-sm font-medium
-                  ${darkMode ? 'text-gray-300' : 'text-gray-700'}
-                `}
-              >
-                Company Name
-              </motion.label>
-              <motion.input
-                variants={placeholderVariants}
-                initial="hidden"
-                animate={formLoaded ? "visible" : "hidden"}
-                transition={{ delay: 0.6 }}
-                type="text"
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
-                name="company"
-                required
-                className={`
-                  w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 transition-all
-                  ${darkMode ? 'bg-gray-700 border-gray-600 focus:ring-blue-500 text-white' :
-                    'bg-white border-gray-300 focus:ring-blue-300 text-gray-800'}
-                `}
-              />
-            </motion.div>
+            <Input
+              label="Company Name"
+              placeholder="Acme Corporation"
+              type="text"
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              name="company"
+              icon={Building2}
+              required
+            />
 
-            {/* Submit */}
-            <motion.button
-              initial={{ opacity: 0, y: 20 }}
-              animate={formLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.7 }}
+            <Button
               type="submit"
-              className={`
-                w-full py-3 px-4 rounded-lg font-medium transition-all
-                ${darkMode ? 'bg-blue-600 hover:bg-blue-700 text-white' :
-                  'bg-blue-500 hover:bg-blue-600 text-white'}
-                shadow-md hover:shadow-lg
-              `}
+              variant="primary"
+              fullWidth
+              isLoading={loading}
+              icon={UserPlus}
             >
               Sign Up
-            </motion.button>
-
-            {/* Redirect Link */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={formLoaded ? { opacity: 1 } : {}}
-              transition={{ delay: 0.8 }}
-              className={`mt-4 text-center text-sm ${
-                darkMode ? 'text-gray-400' : 'text-gray-600'
-              }`}
-            >
-              Already have an account?{' '}
-              <Link to="/login" className={`font-medium hover:underline ${
-                darkMode ? 'text-blue-400' : 'text-blue-600'
-              }`}>
-                Log in
-              </Link>
-            </motion.div>
+            </Button>
           </form>
+
+          {/* Redirect link */}
+          <div className="mt-6 text-center text-sm text-slate-400">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="font-medium text-violet-400 hover:text-violet-300 hover:underline transition-colors"
+            >
+              Log in
+            </Link>
+          </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

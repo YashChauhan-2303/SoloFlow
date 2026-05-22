@@ -1,140 +1,173 @@
-import React from 'react'
-import { motion } from 'framer-motion'
-import { FiBell, FiMoon, FiSun, FiUser } from 'react-icons/fi'
+import React, { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { LayoutDashboard, Users, BarChart3, Bell, User, Menu, X } from 'lucide-react'
 import { NavLink, useParams } from 'react-router-dom'
 import { useNotification } from '../contexts/NotificationContext'
-import { useTheme } from '../contexts/ThemeContext'
+
+const navItems = [
+  { label: 'Dashboard', path: 'dashboard', icon: LayoutDashboard },
+  { label: 'Clients', path: 'clients', icon: Users },
+  { label: 'Statistics', path: 'statistics', icon: BarChart3 },
+]
 
 function Navbar() {
-  const { darkMode, toggleDarkMode } = useTheme() || { darkMode: false, toggleDarkMode: () => {} };
-  const { user_id } = useParams();
-  // Defensive: if NotificationProvider is not mounted, provide fallbacks to avoid runtime crash
-  const notificationCtx = useNotification();
-  const { drawerOpen = false, toggleDrawer = () => {}, notifications = [] } = notificationCtx || {};
-
-  const activeLinkStyle = darkMode 
-    ? 'text-blue-300 border-blue-400 font-medium' 
-    : 'text-blue-600 border-blue-500 font-medium'
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { user_id } = useParams()
+  const notificationCtx = useNotification()
+  const { toggleDrawer = () => {}, notifications = [] } = notificationCtx || {}
 
   return (
-    <div className={`
-      w-full top-0 py-4 px-6
-      ${darkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}
-      border-b
-      flex items-center justify-between
-      transition-colors duration-300
-    `}>
-      {/* Updated Logo - matches Header.jsx */}
-      <motion.div
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="flex items-center space-x-2 cursor-pointer"
-      >
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-          <span className="text-white font-bold text-sm">S</span>
+    <nav className="sticky top-0 z-50 h-16 w-full bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-white/[0.06]">
+      <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* ── Logo ── */}
+        <NavLink to="/" className="flex items-center gap-2.5 group" aria-label="SoloFlow home">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-indigo-500 shadow-lg shadow-violet-500/20"
+          >
+            <span className="text-sm font-bold text-white select-none">S</span>
+          </motion.div>
+          <span className="hidden sm:block text-lg font-semibold text-slate-100 tracking-tight">
+            SoloFlow
+          </span>
+        </NavLink>
+
+        {/* ── Desktop Navigation ── */}
+        <div className="hidden md:flex items-center gap-1">
+          {navItems.map(({ label, path, icon: Icon }) => (
+            <NavLink
+              key={path}
+              to={`/${user_id}/${path}`}
+              className="relative"
+            >
+              {({ isActive }) => (
+                <motion.div
+                  whileHover={{ backgroundColor: 'rgba(255,255,255,0.04)' }}
+                  className={`flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium transition-colors duration-150
+                    ${isActive ? 'text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                >
+                  <Icon size={16} strokeWidth={isActive ? 2.2 : 1.8} />
+                  {label}
+                  {isActive && (
+                    <motion.div
+                      layoutId="navbar-indicator"
+                      className="absolute inset-x-2 -bottom-[1px] h-[2px] rounded-full bg-gradient-to-r from-violet-500 to-indigo-500"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </motion.div>
+              )}
+            </NavLink>
+          ))}
         </div>
-        <NavLink 
-          to="/" 
-          className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
-        >
-          Soloflow
-        </NavLink>
-      </motion.div>
 
-      {/* Navigation Links - unchanged */}
-      <div className="flex items-center space-x-8">
-        <NavLink 
-          to={`/${user_id}/dashboard`}
-          className={({ isActive }) => `
-            py-2 px-1 border-b-2
-            ${darkMode ? 
-              'text-gray-300 hover:text-blue-300 border-transparent' : 
-              'text-gray-600 hover:text-blue-500 border-transparent'
-            }
-            ${isActive ? activeLinkStyle : ''}
-            transition-colors duration-200
-          `}
-        >
-          Dashboard
-        </NavLink>
+        {/* ── Right Section ── */}
+        <div className="flex items-center gap-1.5">
+          {/* Notification Bell */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={toggleDrawer}
+            className="relative flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition-colors duration-150 hover:bg-white/[0.06] hover:text-slate-200"
+            aria-label="Show notifications"
+          >
+            <Bell size={18} strokeWidth={1.8} />
+            {notifications.length > 0 && (
+              <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-[#0a0a0f]/80 animate-pulse" />
+            )}
+          </motion.button>
 
-        <NavLink 
-          to={`/${user_id}/clients`}
-          className={({ isActive }) => `
-            py-2 px-1 border-b-2
-            ${darkMode ? 
-              'text-gray-300 hover:text-blue-300 border-transparent' : 
-              'text-gray-600 hover:text-blue-500 border-transparent'
-            }
-            ${isActive ? activeLinkStyle : ''}
-            transition-colors duration-200
-          `}
-        >
-          Clients
-        </NavLink>
+          {/* User Profile */}
+          <NavLink
+            to={`/${user_id}/userprofile`}
+            aria-label="User profile"
+          >
+            {({ isActive }) => (
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors duration-150
+                  ${isActive
+                    ? 'bg-gradient-to-br from-violet-500/20 to-indigo-500/20 text-violet-400 ring-1 ring-violet-500/30'
+                    : 'text-slate-400 hover:bg-white/[0.06] hover:text-slate-200'
+                  }`}
+              >
+                <User size={18} strokeWidth={1.8} />
+              </motion.div>
+            )}
+          </NavLink>
 
-        <NavLink 
-          to={`/${user_id}/statistics`}
-          className={({ isActive }) => `
-            py-2 px-1 border-b-2
-            ${darkMode ? 
-              'text-gray-300 hover:text-blue-300 border-transparent' : 
-              'text-gray-600 hover:text-blue-500 border-transparent'
-            }
-            ${isActive ? activeLinkStyle : ''}
-            transition-colors duration-200
-          `}
-        >
-          Statistics
-        </NavLink>
-
-        {/* Icon-only profile link */}
-        <NavLink 
-          to= {`/${user_id}/userprofile`} 
-          className={({ isActive }) => `
-            p-2 rounded-full
-            ${darkMode ? 
-              'text-gray-300 hover:text-blue-300 hover:bg-gray-700' : 
-              'text-gray-600 hover:text-blue-500 hover:bg-gray-100'
-            }
-            ${isActive ? (darkMode ? 'text-blue-300 bg-gray-700' : 'text-blue-500 bg-gray-100') : ''}
-            transition-colors duration-200
-          `}
-          aria-label="Profile"
-        >
-          <FiUser className="text-xl" />
-        </NavLink>
+          {/* Mobile Menu Toggle */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            className="md:hidden flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition-colors duration-150 hover:bg-white/[0.06] hover:text-slate-200"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </motion.button>
+        </div>
       </div>
-      <button
-  onClick={toggleDrawer}
-  className={`relative ml-4 p-2 rounded-full transition-all duration-300 ${
-    darkMode ? "bg-gray-800 text-blue-300 hover:bg-gray-700" : "bg-gray-100 text-blue-600 hover:bg-blue-200"
-  }`}
-  aria-label="Show notifications"
->
-  <FiBell size={20} />
-  {notifications.length > 0 && (
-    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-  )}
-</button>
 
-      {/* Dark Mode Toggle - unchanged */}
-      <button
-        onClick={toggleDarkMode}
-        className={`
-          p-2 rounded-full
-          ${darkMode ? 
-            'bg-gray-700 text-yellow-300 hover:bg-gray-600' : 
-            'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          }
-          shadow-md hover:shadow-lg 
-          transition-all duration-300
-        `}
-        aria-label="Toggle dark mode"
-      >
-        {darkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
-      </button>
-    </div>
+      {/* ── Mobile Menu ── */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+            className="md:hidden overflow-hidden border-b border-white/[0.06] bg-[#0a0a0f]/95 backdrop-blur-xl"
+          >
+            <div className="mx-auto max-w-7xl space-y-1 px-4 pb-4 pt-2 sm:px-6">
+              {navItems.map(({ label, path, icon: Icon }) => (
+                <NavLink
+                  key={path}
+                  to={`/${user_id}/${path}`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {({ isActive }) => (
+                    <motion.div
+                      whileTap={{ scale: 0.98 }}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-150
+                        ${isActive
+                          ? 'bg-gradient-to-r from-violet-500/10 to-indigo-500/10 text-white ring-1 ring-inset ring-violet-500/20'
+                          : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-200'
+                        }`}
+                    >
+                      <Icon size={16} strokeWidth={isActive ? 2.2 : 1.8} />
+                      {label}
+                    </motion.div>
+                  )}
+                </NavLink>
+              ))}
+
+              {/* Mobile Profile Link */}
+              <NavLink
+                to={`/${user_id}/userprofile`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {({ isActive }) => (
+                  <motion.div
+                    whileTap={{ scale: 0.98 }}
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-150
+                      ${isActive
+                        ? 'bg-gradient-to-r from-violet-500/10 to-indigo-500/10 text-white ring-1 ring-inset ring-violet-500/20'
+                        : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-200'
+                      }`}
+                  >
+                    <User size={16} strokeWidth={isActive ? 2.2 : 1.8} />
+                    Profile
+                  </motion.div>
+                )}
+              </NavLink>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
   )
 }
 

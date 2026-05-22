@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
-import { FiTrash2, FiX } from "react-icons/fi";
+import { FiX } from "react-icons/fi";
+import { Trash2, X, Bell } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useNotification } from "../contexts/NotificationContext";
+import { Button } from "./ui";
 
 export default function NotificationDrawer() {
   const {
@@ -34,54 +36,72 @@ export default function NotificationDrawer() {
 
   return (
     <div
-      className={`fixed top-0 right-0 h-full w-80 bg-white dark:bg-gray-900 shadow-2xl z-50 transform transition-transform duration-300 ${
-        drawerOpen ? "translate-x-0" : "translate-x-full"
+      className={`fixed top-0 right-0 h-full w-80 bg-[#0a0a0f] border-l border-white/[0.08] shadow-2xl z-50 flex flex-col transform transition-all duration-300 ${
+        drawerOpen 
+          ? "translate-x-0 pointer-events-auto opacity-100" 
+          : "translate-x-full pointer-events-none opacity-0 invisible"
       }`}
       style={{ maxWidth: "90vw" }}
     >
-      <div className="flex items-center justify-between px-6 py-4 border-b dark:border-gray-700">
-        <span className="text-lg font-bold dark:text-white">Notifications</span>
+      {/* Header */}
+      <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.06]">
+        <div className="flex items-center gap-2.5">
+          <div className="h-7 w-7 rounded-lg bg-violet-600/10 flex items-center justify-center border border-violet-500/20">
+            <Bell className="text-violet-400" size={15} />
+          </div>
+          <span className="text-base font-semibold text-slate-100 tracking-tight">Notifications</span>
+        </div>
         <button
           onClick={toggleDrawer}
-          className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition"
+          className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] transition-colors cursor-pointer"
           aria-label="Close notifications"
         >
-          <FiX size={20} />
+          <X size={18} />
         </button>
       </div>
-      <div className="flex-1 overflow-y-auto px-4 py-2 space-y-4">
+
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto p-5 space-y-4 scrollbar-thin">
         {notifications.length === 0 ? (
-          <div className="text-center text-gray-400 mt-8">No notifications</div>
+          <div className="flex flex-col items-center justify-center py-16 text-center text-slate-500 space-y-3">
+            <div className="h-10 w-10 rounded-full bg-white/[0.02] border border-white/[0.04] flex items-center justify-center">
+              <Bell className="text-slate-600" size={20} />
+            </div>
+            <p className="text-sm font-medium">No notifications yet</p>
+          </div>
         ) : (
           notifications.map((n) => (
             <div
               key={n.id}
-              className="bg-blue-50 dark:bg-gray-800 rounded-lg p-4 shadow flex items-start justify-between"
+              className="bg-slate-900/40 border border-white/[0.06] rounded-xl p-4 flex items-start justify-between gap-3 shadow-lg hover:border-violet-500/20 transition-all duration-200"
             >
-              <div>
-                <div className="font-semibold text-blue-700 dark:text-blue-300">{n.title}</div>
-                <div className="text-sm text-gray-700 dark:text-gray-300">{n.message}</div>
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-sm text-violet-400 leading-snug">{n.title}</div>
+                <div className="text-xs text-slate-300 leading-relaxed mt-1">{n.message}</div>
               </div>
               <button
                 onClick={() => removeNotification(n.id)}
-                className="ml-2 p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+                className="p-1 rounded-lg text-slate-500 hover:text-slate-300 hover:bg-white/[0.06] transition-colors cursor-pointer"
                 aria-label="Remove notification"
               >
-                <FiX size={16} />
+                <FiX size={15} />
               </button>
             </div>
           ))
         )}
       </div>
-      <div className="px-6 py-4 border-t dark:border-gray-700 flex justify-end">
-        <button
+
+      {/* Footer */}
+      <div className="px-6 py-4 border-t border-white/[0.06] flex justify-end bg-slate-950/40">
+        <Button
           onClick={clearNotifications}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition"
+          variant="danger"
+          size="sm"
           disabled={notifications.length === 0}
+          icon={Trash2}
         >
-          <FiTrash2 size={16} />
           Clear All
-        </button>
+        </Button>
       </div>
     </div>
   );

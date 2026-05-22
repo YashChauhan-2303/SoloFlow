@@ -1,59 +1,58 @@
-import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { FiMoon, FiSun } from "react-icons/fi";
+import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
-import { useTheme } from "../contexts/ThemeContext";
+import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { Button, Input } from "../components/ui";
 
 function Login() {
   const [show, setShow] = useState(false);
-  const { darkMode, toggleDarkMode } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [verifyPassword, setVerifyPassword] = useState();
   const [passwordTouched, setPasswordTouched] = useState(false);
   const [formLoaded, setFormLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Trigger the animation when component mounts
     setFormLoaded(true);
   }, []);
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    const loginUser={
+    const loginUser = {
       useremail: email,
       password: password,
+    };
+
+    try {
+      const response = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginUser)
+      });
+
+      const res = await response.json();
+
+      if (!response.ok) {
+        toast.error(res.message);
+        return;
+      } else {
+        toast.success(res.message);
+        localStorage.setItem("token", res.token);
+        localStorage.setItem("user_id", res.user._id);
+        navigate(`/${res.user._id}/dashboard`);
+      }
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
     }
-    try{
-        const response= await fetch('http://localhost:3000/login',{
-          method: 'POST',
-          headers:{
-            'Content-Type':'application/json'
-          },
-          body: JSON.stringify(loginUser)
-        })
-
-        const res= await response.json();
-
-        if(!response.ok){
-          toast.error(res.message );
-          return;
-        }
-        else{ 
-          
-          toast.success(res.message);
-          localStorage.setItem("token", res.token);
-          localStorage.setItem("user_id", res.user._id);
-          navigate(`/${res.user._id}/dashboard`);
-        }
-      }
-      catch(err){
-        toast.error(err.message);
-      }
   };
 
   const passwordHandler = (e) => {
@@ -73,212 +72,117 @@ function Login() {
     }
   };
 
-  // Animation variants for placeholders
-  const placeholderVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    }
-  };
-
   return (
-    <div
-      className={`
-  w-full min-h-screen transition-colors duration-300 
-  ${
-    darkMode
-      ? "bg-gray-900 text-gray-100"
-      : "bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-800"
-  }
-`}
-    >
-      {/* Dark Mode Toggle */}
-      <div className="flex justify-end p-4">
-        <button
-          onClick={toggleDarkMode}
-          className={`p-2 rounded-full ${
-            darkMode ? "bg-gray-700 text-yellow-300" : "bg-white text-gray-700"
-          } shadow-md hover:shadow-lg transition-all`}
-          aria-label="Toggle dark mode"
-        >
-          {darkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
-        </button>
-      </div>
-          
-      {/* Login Form Container */}
-      <div className="flex items-center justify-center p-4">
-        <div
-          className={`
-      w-full max-w-md p-8 rounded-2xl shadow-xl transition-all
-      ${
-        darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-blue-200"
-      } border
-    `}
-        >
-          <motion.h2
-            initial={{ opacity: 0, y: -20 }}
-            animate={formLoaded ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-            className={`
-        text-2xl font-bold mb-6 text-center
-        ${darkMode ? "text-white" : "text-blue-800"}
-      `}
+    <div className="w-full min-h-screen bg-[#0a0a0f] text-slate-100 flex items-center justify-center relative overflow-hidden py-12 px-4 sm:px-6 lg:px-8 animate-fade-in">
+      {/* Ambient Glowing Orbs */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="sf-dot-grid" />
+      <div className="noise-overlay absolute inset-0 opacity-[0.02] pointer-events-none" />
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={formLoaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="w-full max-w-md z-10"
+      >
+        {/* Header */}
+        <div className="flex flex-col items-center mb-8 text-center">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, type: 'spring' }}
+            className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-500 shadow-xl shadow-violet-500/20 mb-4"
           >
-            Login to SoloFlow
-          </motion.h2>
+            <span className="text-xl font-bold text-white select-none">S</span>
+          </motion.div>
+          <h2 className="text-3xl font-bold text-white tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+            Welcome back
+          </h2>
+          <p className="text-slate-400 text-sm mt-2">
+            Enter your credentials to access your workspace
+          </p>
+        </div>
 
-          <form onSubmit={handleSubmit}>
-            <motion.div 
-              className="mb-4"
-              initial={{ opacity: 0 }}
-              animate={formLoaded ? { opacity: 1 } : {}}
-              transition={{ delay: 0.2 }}
-            >
-              <motion.label
-                variants={placeholderVariants}
-                initial="hidden"
-                animate={formLoaded ? "visible" : "hidden"}
-                className={`
-            block mb-2 text-sm font-medium
-            ${darkMode ? "text-gray-300" : "text-gray-700"}
-          `}
-              >
-                Email
-              </motion.label>
-              <motion.input
-                variants={placeholderVariants}
-                initial="hidden"
-                animate={formLoaded ? "visible" : "hidden"}
-                transition={{ delay: 0.3 }}
-                type="email"
-                value={email}
-                name="email"
-                onChange={(e) => setEmail(e.target.value)}
-                className={`
-              w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 transition-all
-              ${
-                darkMode
-                  ? "bg-gray-700 border-gray-600 focus:ring-blue-500 text-white"
-                  : "bg-white border-gray-300 focus:ring-blue-300 text-gray-800"
-              }
-            `}
+        {/* Login Card */}
+        <div className="bg-slate-900/60 backdrop-blur-xl border border-white/[0.08] shadow-2xl shadow-purple-500/5 p-8 rounded-2xl">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <Input
+              label="Email address"
+              placeholder="name@company.com"
+              type="email"
+              value={email}
+              name="email"
+              onChange={(e) => setEmail(e.target.value)}
+              icon={Mail}
+              required
+            />
+
+            <div>
+              <Input
+                label="Password"
+                placeholder="••••••••"
+                type={show ? "text" : "password"}
+                value={password}
+                onChange={passwordHandler}
+                onFocus={() => setPasswordTouched(true)}
+                name="password"
+                icon={Lock}
                 required
+                rightElement={
+                  <button
+                    type="button"
+                    onClick={() => setShow(!show)}
+                    className="text-slate-400 hover:text-slate-200 transition-colors p-1"
+                    tabIndex={-1}
+                  >
+                    {show ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                }
               />
-            </motion.div>
 
-            <motion.div 
-              className="mb-6 relative"
-              initial={{ opacity: 0 }}
-              animate={formLoaded ? { opacity: 1 } : {}}
-              transition={{ delay: 0.4 }}
-            >
-              <motion.label
-                variants={placeholderVariants}
-                initial="hidden"
-                animate={formLoaded ? "visible" : "hidden"}
-                className={`
-    block mb-2 text-sm font-medium
-    ${darkMode ? "text-gray-300" : "text-gray-700"}
-  `}
-              >
-                Password
-              </motion.label>
-              <motion.div 
-                variants={placeholderVariants}
-                initial="hidden"
-                animate={formLoaded ? "visible" : "hidden"}
-                transition={{ delay: 0.5 }}
-                className="relative"
-              >
-                <input
-                  type={show ? "text" : "password"}
-                  value={password}
-                  onChange={passwordHandler}
-                  onFocus={() => {
-                    setPasswordTouched(true);
-                  }}
-                  name="password"
-                  className={`
-        w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 transition-all
-        ${
-          darkMode
-            ? "bg-gray-700 border-gray-600 focus:ring-blue-500 text-white"
-            : "bg-white border-gray-300 focus:ring-blue-300 text-gray-800"
-        }
-      `}
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShow(!show)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                  tabIndex={-1}
+              {/* Password rules box when not matched */}
+              {!verifyPassword && passwordTouched && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="text-red-400 bg-red-500/5 border border-red-500/20 rounded-lg px-4 py-2.5 mt-3 text-xs leading-relaxed"
                 >
-                  {show ? (
-                    <AiOutlineEyeInvisible size={20} />
-                  ) : (
-                    <AiOutlineEye size={20} />
-                  )}
-                </button>
-              </motion.div>
-            </motion.div>
+                  Password must be 8-20 characters long and include:
+                  <ul className="list-disc list-inside mt-1 space-y-0.5 opacity-90">
+                    <li>At least one uppercase letter (A-Z)</li>
+                    <li>At least one lowercase letter (a-z)</li>
+                    <li>At least one digit (0-9)</li>
+                    <li>At least one special character (e.g. !@#$)</li>
+                    <li>No spaces</li>
+                  </ul>
+                </motion.div>
+              )}
+            </div>
 
-            {!verifyPassword && passwordTouched && (
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }}
-                className="text-red-600 bg-red-50 border-2 border-dotted mb-2 border-red-200 rounded px-4 py-2 mt-2 text-sm"
-              >
-                Password should contain a minimum of 8 characters including at
-                least 1 uppercase letter, 1 lowercase letter, 1 digit, and 1
-                symbol.
-              </motion.div>
-            )}
-            <motion.button
-              initial={{ opacity: 0, y: 20 }}
-              animate={formLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.6 }}
+            <Button
               type="submit"
-              className={`
-            w-full py-3 px-4 rounded-lg font-medium transition-all
-            ${
-              darkMode
-                ? "bg-blue-600 hover:bg-blue-700 text-white"
-                : "bg-blue-500 hover:bg-blue-600 text-white"
-            } shadow-md hover:shadow-lg
-          `}
+              variant="primary"
+              fullWidth
+              isLoading={loading}
+              icon={ArrowRight}
             >
               Log In
-            </motion.button>
-
-            {/* Additional Links */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={formLoaded ? { opacity: 1 } : {}}
-              transition={{ delay: 0.7 }}
-              className={`mt-4 text-center text-sm ${
-                darkMode ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
-              Don't have an account?{" "}
-              <Link
-                to="/register"
-                className={`font-medium hover:underline ${
-                  darkMode ? "text-blue-400" : "text-blue-600"
-                }`}
-              >
-                Sign up
-              </Link>
-            </motion.div>
+            </Button>
           </form>
+
+          {/* Redirect link */}
+          <div className="mt-6 text-center text-sm text-slate-400">
+            Don't have an account?{" "}
+            <Link
+              to="/register"
+              className="font-medium text-violet-400 hover:text-violet-300 hover:underline transition-colors"
+            >
+              Sign up
+            </Link>
+          </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
