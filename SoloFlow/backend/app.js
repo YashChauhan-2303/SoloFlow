@@ -41,6 +41,14 @@ app.listen(3000,()=>{
 );
 //cron alerts should be revisited!!!
 
+//for uptimerobot
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    service: "SoloFlow API"
+  });
+});
+
 app.get('/stats/weekly-deadlines/:user_id', authenticateJWT, StatController.getWeeklyProjectDeadlineStats);
 // user routes
 app.post('/register', UserController.registerUser);
