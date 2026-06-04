@@ -16,7 +16,7 @@
     "easyinvoice": "^3.0.47",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.16.0",
+    "mongoose": "^9.6.2",
     "mongoose-sequence": "^6.0.1",
     "node-cron": "^4.1.0",
     "password-validator": "^5.3.0",
